@@ -1,0 +1,155 @@
+# Google Apps Script Deployment Guide
+
+## Step 1
+
+Open Google Drive
+
+Create
+
+New
+
+↓
+
+More
+
+↓
+
+Google Apps Script
+
+---
+
+## Step 2
+
+Delete the default code.
+
+Copy **Code.gs** into the editor.
+
+---
+
+## Step 3
+
+Save the project.
+
+Project Name:
+
+Smart RFID Attendance
+
+---
+
+## Step 4
+
+Click
+
+Deploy
+
+↓
+
+New Deployment
+
+---
+
+## Step 5
+
+Select
+
+Web App
+
+---
+
+## Step 6
+
+Description
+
+Version 1
+
+---
+
+## Step 7
+
+Execute As
+
+Me
+
+---
+
+## Step 8
+
+Who Has Access
+
+Anyone
+
+---
+
+## Step 9
+
+Click
+
+Deploy
+
+---
+
+## Step 10
+
+Authorize the application.
+
+Allow all permissions.
+
+---
+
+## Step 11
+
+Copy the Web App URL.
+
+Example
+
+https://script.google.com/macros/s/AKfycbxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/exec
+
+---
+
+## Step 12
+
+Open
+
+NodeMCU_ESP8266/Config.h
+
+Replace
+
+YOUR_DEPLOYMENT_ID
+
+with your Web App URL.
+
+---
+
+## Step 13
+
+Upload the NodeMCU code.
+
+---
+
+## Step 14
+
+Create the Google Sheet with the following columns:
+
+| Name | UID | Date | Login Time | Logout Time | Status |
+
+The Apps Script will automatically append new login rows and update the Logout Time for the corresponding record.
+
+---
+
+## Testing
+
+Open a browser and visit:
+
+https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec?uid=53317856&name=Manasa&action=LOGIN
+
+Expected response:
+
+LOGIN SUCCESS
+
+Then test:
+
+https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec?uid=53317856&name=Manasa&action=LOGOUT
+
+Expected response:
+
+LOGOUT SUCCESS

@@ -1,0 +1,74 @@
+/******************************************************
+ Smart RFID Attendance System
+ Google Apps Script
+ Author : Nandan Kumar M
+******************************************************/
+
+function doGet(e) {
+
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+
+  var uid = e.parameter.uid;
+  var name = e.parameter.name;
+  var action = e.parameter.action;
+
+  var now = new Date();
+
+  var date = Utilities.formatDate(
+      now,
+      Session.getScriptTimeZone(),
+      "dd-MM-yyyy"
+  );
+
+  var time = Utilities.formatDate(
+      now,
+      Session.getScriptTimeZone(),
+      "HH:mm:ss"
+  );
+
+  var data = sheet.getDataRange().getValues();
+
+  // ===============================
+  // LOGIN
+  // ===============================
+
+  if(action == "LOGIN"){
+
+    sheet.appendRow([
+      name,
+      uid,
+      date,
+      time,
+      "",
+      "Present"
+    ]);
+
+    return ContentService
+      .createTextOutput("LOGIN SUCCESS");
+  }
+
+  // ===============================
+  // LOGOUT
+  // ===============================
+
+  if(action == "LOGOUT"){
+
+    for(var i=data.length-1;i>=1;i--){
+
+      if(data[i][1]==uid && data[i][4]==""){
+
+        sheet.getRange(i+1,5).setValue(time);
+
+        return ContentService
+          .createTextOutput("LOGOUT SUCCESS");
+      }
+
+    }
+
+    return ContentService
+      .createTextOutput("LOGIN RECORD NOT FOUND");
+  }
+
+  return ContentService
+      .createTextOutput("INVALID REQUEST");
+}
