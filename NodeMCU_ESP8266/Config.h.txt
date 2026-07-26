@@ -1,0 +1,17 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+//==============================
+// Google Apps Script URL
+//==============================
+
+const String scriptURL =
+"https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec";
+
+//==============================
+// Serial Communication
+//==============================
+
+#define SERIAL_BAUD 9600
+
+#endif

@@ -1,0 +1,119 @@
+#include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
+#include <WiFiClientSecure.h>
+
+const char* ssid = "Nandan";
+const char* password = "10042903";
+
+// Replace with your latest Google Apps Script Web App URL
+const String scriptURL = "https://script.google.com/macros/s/AKfycbyngNNTNGn-YKBPaznbfPn29fN8x-6tH5MrNtNNJj3gJCN6nJsP8ivdeXZjaQwbAoaNFQ/exec";
+
+void setup() {
+
+  Serial.begin(9600);
+
+  Serial.println();
+  Serial.println("Connecting to WiFi...");
+
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println();
+  Serial.println("WiFi Connected");
+  Serial.print("IP Address : ");
+  Serial.println(WiFi.localIP());
+}
+
+void loop() {
+
+  if (Serial.available()) {
+
+    String received = Serial.readStringUntil('\n');
+    received.trim();
+
+    if (received.length() == 0)
+      return;
+
+    Serial.print("Received : ");
+    Serial.println(received);
+
+    // Ignore unwanted messages
+    if (received.indexOf(',') == -1) {
+      Serial.println("Ignored");
+      return;
+    }
+
+    sendAttendance(received);
+  }
+}
+
+void sendAttendance(String data) {
+
+  int comma = data.indexOf(',');
+
+  if (comma == -1) {
+    Serial.println("Invalid Data");
+    return;
+  }
+
+  String uid = data.substring(0, comma);
+  String name = data.substring(comma + 1);
+
+  uid.trim();
+  name.trim();
+
+  Serial.println("-------------------------");
+  Serial.print("UID  : ");
+  Serial.println(uid);
+
+  Serial.print("Name : ");
+  Serial.println(name);
+
+  String url = scriptURL;
+  url += "?name=" + name;
+  url += "&uid=" + uid;
+
+  url.replace(" ", "%20");
+
+  Serial.println("Sending...");
+  Serial.println(url);
+
+  WiFiClientSecure client;
+  client.setInsecure();
+
+  HTTPClient http;
+  http.useHTTP10(true);
+  http.begin(client, url);
+
+  int httpCode = http.GET();
+
+  Serial.print("HTTP Code : ");
+  Serial.println(httpCode);
+
+  if (httpCode > 0) {
+
+    String response = http.getString();
+    Serial.print("Server Response : ");
+    Serial.println(response);
+
+}
+else if (httpCode == -11) {
+
+    Serial.println("Attendance uploaded successfully.");
+
+}
+else {
+
+    Serial.print("Error : ");
+    Serial.println(http.errorToString(httpCode));
+
+}
+
+  http.end();
+
+  Serial.println("-------------------------");
+}
