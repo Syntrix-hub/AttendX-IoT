@@ -1,0 +1,27 @@
+#ifndef STUDENTDATA_H
+#define STUDENTDATA_H
+
+struct Student {
+
+  String uid;
+  String name;
+  bool loggedIn;
+
+};
+
+// Add Students Here
+
+Student students[] = {
+
+  {"53317856","Manasa",false},
+  {"8D974E05","Sagari",false},
+
+  // Add more students below
+
+  // {"UID","NAME",false},
+
+};
+
+const int totalStudents = sizeof(students)/sizeof(students[0]);
+
+#endif
